@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  atlassianId   String?   @unique
+  accessToken   String?
+  refreshToken  String?
+  mappings      Mapping[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Mapping {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  bitbucketRepoId   String
+  confluencePageId  String
+  isActive          Boolean  @default(true)
+  lastSyncedAt      DateTime?
+  createdAt         DateTime @default(now())
+}
